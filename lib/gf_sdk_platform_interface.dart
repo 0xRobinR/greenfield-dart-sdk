@@ -26,4 +26,40 @@ abstract class GfSdkPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<String?> getApproval({required String authKey, required String primaryAddress, required String bucketName, required String spAddress}) {
+    throw UnimplementedError('getApproval() has not been implemented.');
+  }
+
+  Future<String?> createBucket({required String authKey, required String primaryAddress, required String bucketName, required String spAddress}) {
+    throw UnimplementedError('createBucket() has not been implemented.');
+  }
+
+  Future<String?> getStorageProviders() {
+    throw UnimplementedError('getStorageProviders() has not been implemented.');
+  }
+
+  Future<String?> getAccountInfo({required String address}) {
+    throw UnimplementedError('getAccountInfo() has not been implemented.');
+  }
+
+  Future<String?> getAccountBalance({required String address}) {
+    throw UnimplementedError('getAccountBalance() has not been implemented.');
+  }
+
+  Future<String?> getStats() {
+    throw UnimplementedError('getStats() has not been implemented.');
+  }
+
+  Future<String?> getUserBuckets({required String address, required String spAddress}) {
+    throw UnimplementedError('getUserBuckets() has not been implemented.');
+  }
+
+  Future<String?> getBucketInfo({required String bucketName}) {
+    throw UnimplementedError('getBucketInfo() has not been implemented.');
+  }
+
+  Future<String?> getBucketObjects({required String bucketName}) {
+    throw UnimplementedError('getBucketObjects() has not been implemented.');
+  }
 }
