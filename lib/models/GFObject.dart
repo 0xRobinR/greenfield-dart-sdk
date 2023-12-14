@@ -9,11 +9,11 @@ class GFBucket {
 
   static fromJson(Map<String, dynamic> json) {
     return GFBucket(
-      bucketName: json["BucketInfo"]["BucketName"],
-      created: int.parse(json["BucketInfo"]["CreateAt"]),
-      visibility: int.parse(json["BucketInfo"]["Visibility"]),
-      createHash: json["CreateTxHash"],
-      block: int.parse(json["UpdateAt"])
+        bucketName: json["BucketInfo"]["BucketName"],
+        created: int.parse(json["BucketInfo"]["CreateAt"]),
+        visibility: int.parse(json["BucketInfo"]["Visibility"]),
+        createHash: json["CreateTxHash"],
+        block: int.parse(json["UpdateAt"])
     );
   }
 

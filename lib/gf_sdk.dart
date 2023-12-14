@@ -50,3 +50,4 @@ class GfSdk {
     return GfSdkPlatform.instance.getBucketObjects(bucketName: bucketName);
   }
 }
+
