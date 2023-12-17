@@ -1,6 +1,6 @@
 name: gf_sdk
 description: A SDK for Flutter Applications to interact with BNB Greenfield
-version: 0.0.1
+version: 0.0.2
 homepage:
 
 environment:

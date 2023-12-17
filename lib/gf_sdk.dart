@@ -1,4 +1,8 @@
 
+import 'dart:typed_data';
+
+import 'package:gf_sdk/constants.dart';
+
 import 'gf_sdk_platform_interface.dart';
 
 class GfSdk {
@@ -49,5 +53,21 @@ class GfSdk {
   Future<String?> getBucketObjects({required String bucketName}) {
     return GfSdkPlatform.instance.getBucketObjects(bucketName: bucketName);
   }
+
+  Future<String> computeHash(
+      {required Uint8List buffer,
+      int segmentSize = DEFAULT_SEGMENT_SIZE,
+      int dataBlocks = DEFAULT_DATA_BLOCKS,
+      int parityBlocks = DEFAULT_PARITY_BLOCKS}) async {
+    return GfSdkPlatform.instance.computeHash(buffer, segmentSize, dataBlocks, parityBlocks);
+  }
+
+  Future<String> encodeRawSegment({required Uint8List data,
+    int dataBlocks = DEFAULT_DATA_BLOCKS,
+    int parityBlocks = DEFAULT_PARITY_BLOCKS}) async {
+    return GfSdkPlatform.instance.encodeRawSegment(data, dataBlocks, parityBlocks);
+  }
+
+
 }
 

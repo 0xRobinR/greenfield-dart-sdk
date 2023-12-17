@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'gf_sdk_method_channel.dart';
@@ -61,5 +63,13 @@ abstract class GfSdkPlatform extends PlatformInterface {
 
   Future<String?> getBucketObjects({required String bucketName}) {
     throw UnimplementedError('getBucketObjects() has not been implemented.');
+  }
+
+  Future<String> computeHash(Uint8List buffer, int segmentSize, int dataBlocks, int parityBlocks) async {
+    throw UnimplementedError('computeHash() has not been implemented.');
+  }
+
+  Future<String> encodeRawSegment(Uint8List data, int dataBlocks, int parityBlocks) async {
+    throw UnimplementedError('encodeRawSegment() has not been implemented.');
   }
 }

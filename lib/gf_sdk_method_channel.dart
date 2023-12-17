@@ -87,4 +87,25 @@ class MethodChannelGfSdk extends GfSdkPlatform {
     });
     return objects;
   }
+
+  @override
+  Future<String> computeHash(Uint8List buffer, int segmentSize, int dataBlocks, int parityBlocks) async {
+    final String result = await methodChannel.invokeMethod('computeHash', {
+      'buffer': buffer,
+      'segmentSize': segmentSize,
+      'dataBlocks': dataBlocks,
+      'parityBlocks': parityBlocks,
+    });
+    return result;
+  }
+
+  @override
+  Future<String> encodeRawSegment(Uint8List data, int dataBlocks, int parityBlocks) async {
+    final String result = await methodChannel.invokeMethod('encodeRawSegment', {
+      'data': data,
+      'dataBlocks': dataBlocks,
+      'parityBlocks': parityBlocks,
+    });
+    return result;
+  }
 }
