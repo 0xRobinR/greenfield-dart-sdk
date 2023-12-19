@@ -12,6 +12,7 @@ interface CreateBucketOpts {
     val PaymentAddress: String?
     var SPAddress: String
 }
+
 class Bucket(authKey: String) {
 
     private lateinit var authKey: String;
@@ -19,49 +20,52 @@ class Bucket(authKey: String) {
 
     companion object {
         fun getBucketInfo(bucketName: String): String {
-        val reqData = JSONObject()
-            .put("bucketName", bucketName)
-            .toString()
+            val reqData = JSONObject()
+                .put("bucketName", bucketName)
+                .toString()
 
-        val response = CreateRequest().fetchResponse(Config.bucketInfo, reqData);
-        Log.d("gf_sdk", response.toString())
+            val response = CreateRequest().fetchResponse(Config.bucketInfo, reqData);
+            Log.d("gf_sdk", response.toString())
 
-        return response.toString()
+            return response.toString()
+        }
+
+        fun getBucketObjects(bucketName: String): String {
+            val reqData = JSONObject()
+                .put("bucketName", bucketName)
+                .toString()
+
+            val response = CreateRequest().fetchResponse(Config.bucketObjects, reqData);
+            Log.d("gf_sdk", response.toString())
+
+            return response.toString()
+        }
     }
 
-    fun getBucketObjects(bucketName: String): String {
-        val reqData = JSONObject()
-            .put("bucketName", bucketName)
-            .toString()
-
-        val response = CreateRequest().fetchResponse(Config.bucketObjects, reqData);
-        Log.d("gf_sdk", response.toString())
-
-        return response.toString()
-    }
-    }
     init {
         if (authKey.isEmpty()) throw Exception("authKey is empty")
         this.authKey = authKey;
         this.caller = CreateRequest();
     }
+
     fun createBucket(bucketName: String, primaryAddress: String, opts: CreateBucketOpts?): String {
         var visibility = VisibilityType.VISIBILITY_TYPE_UNSPECIFIED
         if (opts?.Visibility != null) {
-            if ( opts.Visibility == VisibilityType.VISIBILITY_TYPE_PUBLIC_READ ||
+            if (opts.Visibility == VisibilityType.VISIBILITY_TYPE_PUBLIC_READ ||
                 opts.Visibility == VisibilityType.VISIBILITY_TYPE_PRIVATE ||
-                opts.Visibility == VisibilityType.VISIBILITY_TYPE_INHERIT) {
+                opts.Visibility == VisibilityType.VISIBILITY_TYPE_INHERIT
+            ) {
                 visibility = opts.Visibility
             }
         }
 
         if (opts?.SPAddress.isNullOrEmpty()) {
-            Log.d("gf_sdk","SPAddress is empty")
+            Log.d("gf_sdk", "SPAddress is empty")
             throw Exception("SPAddress is empty")
         }
 
-        if ( primaryAddress.isEmpty()) {
-            Log.d("gf_sdk","primaryAddress is empty")
+        if (primaryAddress.isEmpty()) {
+            Log.d("gf_sdk", "primaryAddress is empty")
             throw Exception("primaryAddress is empty")
         }
 
@@ -81,18 +85,23 @@ class Bucket(authKey: String) {
         return response.toString()
     }
 
-    fun requestApproval(bucketName: String, primaryAddress: String, opts: CreateBucketOpts?): String {
+    fun requestApproval(
+        bucketName: String,
+        primaryAddress: String,
+        opts: CreateBucketOpts?
+    ): String {
         var visibility = VisibilityType.VISIBILITY_TYPE_UNSPECIFIED
         if (opts?.Visibility != null) {
-            if ( opts.Visibility == VisibilityType.VISIBILITY_TYPE_PUBLIC_READ ||
+            if (opts.Visibility == VisibilityType.VISIBILITY_TYPE_PUBLIC_READ ||
                 opts.Visibility == VisibilityType.VISIBILITY_TYPE_PRIVATE ||
-                opts.Visibility == VisibilityType.VISIBILITY_TYPE_INHERIT) {
+                opts.Visibility == VisibilityType.VISIBILITY_TYPE_INHERIT
+            ) {
                 visibility = opts.Visibility
             }
         }
 
         if (opts?.SPAddress.isNullOrEmpty()) {
-            Log.d("gf_sdk","SPAddress is empty")
+            Log.d("gf_sdk", "SPAddress is empty")
             throw Exception("SPAddress is empty")
         }
 
@@ -107,21 +116,6 @@ class Bucket(authKey: String) {
         Log.d(TAG, "requestApproval: $reqData")
 
         val response = this.caller.fetchResponse(Config.requestApproval, reqData);
-        Log.d("gf_sdk", response.toString())
-
-        return response.toString()
-    }
-
-
-
-    fun createObject(bucketName: String, objectName: String, objectData: String): String {
-        val reqData = JSONObject()
-            .put("bucketName", bucketName)
-            .put("objectName", objectName)
-            .put("objectData", objectData)
-            .toString()
-
-        val response = this.caller.fetchResponse(Config.createObject, reqData);
         Log.d("gf_sdk", response.toString())
 
         return response.toString()

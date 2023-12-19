@@ -4,6 +4,8 @@ import android.util.Log
 import com.greenfield.sdk.gf_sdk.api.Account
 import com.greenfield.sdk.gf_sdk.api.Bucket
 import com.greenfield.sdk.gf_sdk.api.CreateBucketOpts
+import com.greenfield.sdk.gf_sdk.api.CreateObjectEstimateOpts
+import com.greenfield.sdk.gf_sdk.api.GFObject
 import com.greenfield.sdk.gf_sdk.api.Greenfield
 import com.greenfield.sdk.gf_sdk.hashencoder.Hashencoder
 import com.greenfield.sdk.gf_sdk.types.VisibilityType
@@ -29,7 +31,7 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this)
     }
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getPlatformVersion" -> {
                 Log.d("gf_sdk", "fetching tendermint status")
@@ -131,14 +133,39 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                 }
             }
 
-            "createObject" -> {
-                Log.d("gf_sdk", "creating object")
+//            "createObject" -> {
+//                Log.d("gf_sdk", "creating object")
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    val response = Object(call.argument<String>("authKey")!!).createObjectEstimate(
+//                        call.argument<String>("objectName")!!,
+//                        call.argument<String>("objectData")!!,
+//                        call.argument<String>("spUrl")!!
+//                    )
+//                    result.success(response)
+//                }
+//            }
+
+            "createObjectEstimate" -> {
+                Log.d("gf_sdk", "creating object estimate")
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = Bucket(call.argument<String>("bucketName")!!).createObject(
-                        call.argument<String>("objectName")!!,
-                        call.argument<String>("objectData")!!,
-                        call.argument<String>("spUrl")!!
-                    )
+                    val expectedChecksums = call.argument<List<String>>("expectedChecksums")
+                    val checksumsArray: Array<String> =
+                        expectedChecksums?.toTypedArray() ?: arrayOf()
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).createObjectEstimate(
+                            object : CreateObjectEstimateOpts {
+                                override val ContentLength = call.argument<Int>("contentLength")
+                                override val ExpectedChecksums =
+                                    checksumsArray
+                                override val FileType = call.argument<String>("fileType")
+                                override val ObjectName = call.argument<String>("objectName")
+                                override val BucketName = call.argument<String>("bucketName")
+                                override val Creator = call.argument<String>("creator")
+                                override val Visibility =
+                                    call.argument<VisibilityType>("visibility")
+                            }
+                        )
                     result.success(response)
                 }
             }

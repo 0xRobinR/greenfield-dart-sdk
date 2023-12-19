@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:gf_sdk/models/CreateObjectApproval.dart';
 
 import 'gf_sdk_platform_interface.dart';
 
@@ -105,6 +106,23 @@ class MethodChannelGfSdk extends GfSdkPlatform {
       'data': data,
       'dataBlocks': dataBlocks,
       'parityBlocks': parityBlocks,
+    });
+    return result;
+  }
+
+  @override
+  Future<String> createObjectEstimate({
+    required String authKey,
+    required CreateObjectEstimate opts}) async {
+    final String result = await methodChannel.invokeMethod('createObjectEstimate', {
+      "authKey": authKey,
+      "contentLength": opts.contentLength,
+      "expectedChecksums": opts.expectedChecksums,
+      "fileType": opts.fileType,
+      "objectName": opts.objectName,
+      "bucketName": opts.bucketName,
+      "creator": opts.creator,
+      "visibility": opts.visibility
     });
     return result;
   }

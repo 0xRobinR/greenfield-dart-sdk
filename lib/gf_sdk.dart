@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:gf_sdk/constants.dart';
+import 'package:gf_sdk/models/CreateObjectApproval.dart';
 
 import 'gf_sdk_platform_interface.dart';
 
@@ -66,6 +67,10 @@ class GfSdk {
     int dataBlocks = DEFAULT_DATA_BLOCKS,
     int parityBlocks = DEFAULT_PARITY_BLOCKS}) async {
     return GfSdkPlatform.instance.encodeRawSegment(data, dataBlocks, parityBlocks);
+  }
+
+  Future<String> createObjectEstimate({required String authKey, required CreateObjectEstimate opts}) async {
+    return GfSdkPlatform.instance.createObjectEstimate(authKey: authKey, opts: opts);
   }
 
 
