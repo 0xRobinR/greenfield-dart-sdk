@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:gf_sdk/interfaces/gf_global.dart';
 import 'package:gf_sdk/models/CreateObjectApproval.dart';
 
 import 'gf_sdk_platform_interface.dart';
@@ -122,7 +123,37 @@ class MethodChannelGfSdk extends GfSdkPlatform {
       "objectName": opts.objectName,
       "bucketName": opts.bucketName,
       "creator": opts.creator,
-      "visibility": opts.visibility
+      "visibility": opts.visibility == GfVisibilityType.public ? "VISIBILITY_TYPE_PUBLIC_READ" : "VISIBILITY_TYPE_PRIVATE"
+    });
+    return result;
+  }
+
+  @override
+  Future<String> createObject({
+    required String authKey,
+    required CreateObjectEstimate opts}) async {
+    final String result = await methodChannel.invokeMethod('createObject', {
+      "authKey": authKey,
+      "contentLength": opts.contentLength,
+      "expectedChecksums": opts.expectedChecksums,
+      "fileType": opts.fileType,
+      "objectName": opts.objectName,
+      "bucketName": opts.bucketName,
+      "creator": opts.creator,
+      "visibility": opts.visibility == GfVisibilityType.public ? "VISIBILITY_TYPE_PUBLIC_READ" : "VISIBILITY_TYPE_PRIVATE"
+    });
+    return result;
+  }
+
+  @override
+  Future<String> createFolder({
+    required String authKey,
+    required CreateObjectEstimate opts}) async {
+    final String result = await methodChannel.invokeMethod('createFolder', {
+      "authKey": authKey,
+      "objectName": opts.objectName,
+      "bucketName": opts.bucketName,
+      "creator": opts.creator
     });
     return result;
   }

@@ -73,6 +73,14 @@ class GfSdk {
     return GfSdkPlatform.instance.createObjectEstimate(authKey: authKey, opts: opts);
   }
 
+  Future<String> createObject({required String authKey, required CreateObjectEstimate opts}) async {
+    return GfSdkPlatform.instance.createObject(authKey: authKey, opts: opts);
+  }
+
+  Future<String> createFolder({required String authKey, required CreateObjectEstimate opts}) async {
+    return GfSdkPlatform.instance.createFolder(authKey: authKey, opts: opts);
+  }
+
 
 }
 

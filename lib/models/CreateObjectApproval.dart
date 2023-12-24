@@ -6,11 +6,13 @@
 // val BucketName: String?
 // val Creator: String?
 
+import 'package:gf_sdk/interfaces/gf_global.dart';
+
 class CreateObjectEstimate {
 
   int? contentLength;
   List<dynamic>? expectedChecksums;
-  String? visibility;
+  GfVisibilityType? visibility;
   String? fileType;
   String? objectName;
   String? bucketName;

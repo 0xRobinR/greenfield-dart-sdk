@@ -75,6 +75,14 @@ abstract class GfSdkPlatform extends PlatformInterface {
   }
 
   Future<String> createObjectEstimate({required String authKey, required CreateObjectEstimate opts}) async {
-    throw UnimplementedError('encodeRawSegment() has not been implemented.');
+    throw UnimplementedError('createObjectEstimate() has not been implemented.');
+  }
+
+  Future<String> createObject({required String authKey, required CreateObjectEstimate opts}) async {
+    throw UnimplementedError('createObjectEstimate() has not been implemented.');
+  }
+
+  Future<String> createFolder({required String authKey, required CreateObjectEstimate opts}) async {
+    throw UnimplementedError('createFolder() has not been implemented.');
   }
 }

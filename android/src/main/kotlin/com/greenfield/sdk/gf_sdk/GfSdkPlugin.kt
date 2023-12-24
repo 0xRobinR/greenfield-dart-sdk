@@ -152,6 +152,7 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                     val expectedChecksums = call.argument<List<String>>("expectedChecksums")
                     val checksumsArray: Array<String> =
                         expectedChecksums?.toTypedArray() ?: arrayOf()
+                    Log.d("gf_sdk", "onMethodCall: ${call.argument<String>("visibility")}")
                     val response =
                         GFObject(call.argument<String>("authKey")!!).createObjectEstimate(
                             object : CreateObjectEstimateOpts {
@@ -163,7 +164,53 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                                 override val BucketName = call.argument<String>("bucketName")
                                 override val Creator = call.argument<String>("creator")
                                 override val Visibility =
-                                    call.argument<VisibilityType>("visibility")
+                                    call.argument<String>("visibility")
+                            }
+                        )
+                    result.success(response)
+                }
+            }
+
+            "createObject" -> {
+                Log.d("gf_sdk", "creating object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val expectedChecksums = call.argument<List<String>>("expectedChecksums")
+                    val checksumsArray: Array<String> =
+                        expectedChecksums?.toTypedArray() ?: arrayOf()
+                    Log.d("gf_sdk", "onMethodCall: ${call.argument<String>("visibility")}")
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).createObject(
+                            object : CreateObjectEstimateOpts {
+                                override val ContentLength = call.argument<Int>("contentLength")
+                                override val ExpectedChecksums =
+                                    checksumsArray
+                                override val FileType = call.argument<String>("fileType")
+                                override val ObjectName = call.argument<String>("objectName")
+                                override val BucketName = call.argument<String>("bucketName")
+                                override val Creator = call.argument<String>("creator")
+                                override val Visibility =
+                                    call.argument<String>("visibility")
+                            }
+                        )
+                    result.success(response)
+                }
+            }
+
+            "createFolder" -> {
+                Log.d("gf_sdk", "creating object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).createFolder(
+                            object : CreateObjectEstimateOpts {
+                                override val ContentLength = 0
+                                override val ExpectedChecksums = arrayOf<String>()
+                                override val Visibility = ""
+                                override val FileType = ""
+                                override val ObjectName = call.argument<String>("objectName")
+                                override val BucketName = call.argument<String>("bucketName")
+                                override val Creator = call.argument<String>("creator")
                             }
                         )
                     result.success(response)

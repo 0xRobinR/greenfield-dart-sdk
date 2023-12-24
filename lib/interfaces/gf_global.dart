@@ -1,0 +1,4 @@
+enum GfVisibilityType {
+  private,
+  public,
+}
