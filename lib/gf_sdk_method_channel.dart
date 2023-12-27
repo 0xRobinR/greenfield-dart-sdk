@@ -157,4 +157,51 @@ class MethodChannelGfSdk extends GfSdkPlatform {
     });
     return result;
   }
+
+  @override
+  Future<String> uploadObject({required String authKey, required CreateObjectEstimate opts, required String filePath, required String txHash}) async {
+    final String result = await methodChannel.invokeMethod('uploadObject', {
+      "authKey": authKey,
+      "objectName": opts.objectName,
+      "bucketName": opts.bucketName,
+      "creator": opts.creator,
+      "filePath": filePath,
+      "txHash": txHash
+    });
+    return result;
+  }
+
+  @override
+  Future<String> deleteObject({required String authKey, required String objectName, required String bucketName, required String creator}) async {
+    final String result = await methodChannel.invokeMethod('deleteObject', {
+      "authKey": authKey,
+      "objectName": objectName,
+      "bucketName": bucketName,
+      "creator": creator
+    });
+    return result;
+  }
+
+  @override
+  Future<String> cancelObject({required String authKey, required String objectName, required String bucketName, required String creator}) async {
+    final String result = await methodChannel.invokeMethod('cancelObject', {
+      "authKey": authKey,
+      "objectName": objectName,
+      "bucketName": bucketName,
+      "creator": creator
+    });
+    return result;
+  }
+
+  @override
+  Future<String> updateObject({required String authKey, required String objectName, required String bucketName, required String creator, required GfVisibilityType visibilityType}) async {
+    final String result = await methodChannel.invokeMethod('updateObject', {
+      "authKey": authKey,
+      "objectName": objectName,
+      "bucketName": bucketName,
+      "creator": creator,
+      "visibility": visibilityType == GfVisibilityType.public ? "VISIBILITY_TYPE_PUBLIC_READ" : "VISIBILITY_TYPE_PRIVATE"
+    });
+    return result;
+  }
 }

@@ -197,6 +197,49 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                 }
             }
 
+            "deleteObject" -> {
+                Log.d("gf_sdk", "deleting object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).deleteObject(
+                            call.argument("bucketName"),
+                            call.argument("objectName"),
+                            call.argument("creator")
+                        )
+                    result.success(response)
+                }
+            }
+
+            "cancelObject" -> {
+                Log.d("gf_sdk", "cancelling object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).cancelObject(
+                            call.argument("bucketName"),
+                            call.argument("objectName"),
+                            call.argument("creator")
+                        )
+                    result.success(response)
+                }
+            }
+
+            "updateObject" -> {
+                Log.d("gf_sdk", "updating object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).updateObject(
+                            call.argument("bucketName"),
+                            call.argument("objectName"),
+                            call.argument("creator"),
+                            call.argument("visibility"),
+                        )
+                    result.success(response)
+                }
+            }
+
             "createFolder" -> {
                 Log.d("gf_sdk", "creating object call")
 
@@ -212,6 +255,28 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                                 override val BucketName = call.argument<String>("bucketName")
                                 override val Creator = call.argument<String>("creator")
                             }
+                        )
+                    result.success(response)
+                }
+            }
+
+            "uploadObject" -> {
+                Log.d("gf_sdk", "upload object call")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response =
+                        GFObject(call.argument<String>("authKey")!!).uploadFile(
+                            object : CreateObjectEstimateOpts {
+                                override val ContentLength = 0
+                                override val ExpectedChecksums = arrayOf<String>()
+                                override val Visibility = ""
+                                override val FileType = ""
+                                override val ObjectName = call.argument<String>("objectName")
+                                override val BucketName = call.argument<String>("bucketName")
+                                override val Creator = call.argument<String>("creator")
+                            },
+                            call.argument<String>("txHash")!!,
+                            call.argument<String>("filePath")!!
                         )
                     result.success(response)
                 }

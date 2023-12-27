@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:gf_sdk/constants.dart';
+import 'package:gf_sdk/interfaces/gf_global.dart';
 import 'package:gf_sdk/models/CreateObjectApproval.dart';
 
 import 'gf_sdk_platform_interface.dart';
@@ -79,6 +80,24 @@ class GfSdk {
 
   Future<String> createFolder({required String authKey, required CreateObjectEstimate opts}) async {
     return GfSdkPlatform.instance.createFolder(authKey: authKey, opts: opts);
+  }
+
+  Future<String> uploadObject({required String authKey, required CreateObjectEstimate opts, required String filePath, required String txHash}) async {
+    return GfSdkPlatform.instance.uploadObject(
+        authKey: authKey, opts: opts, filePath: filePath, txHash: txHash
+    );
+  }
+
+  Future<String> deleteObject({required String authKey, required String bucketName, required String objectName, required String creator}) async {
+    return GfSdkPlatform.instance.deleteObject(authKey: authKey, bucketName: bucketName, objectName: objectName, creator: creator);
+  }
+
+  Future<String> cancelObject({required String authKey, required String bucketName, required String objectName, required String creator}) async {
+    return GfSdkPlatform.instance.cancelObject(authKey: authKey, bucketName: bucketName, objectName: objectName, creator: creator);
+  }
+
+  Future<String> updateObject({required String authKey, required String bucketName, required String objectName, required String creator, required GfVisibilityType visibilityType}) async {
+    return GfSdkPlatform.instance.updateObject(authKey: authKey, bucketName: bucketName, objectName: objectName, creator: creator, visibilityType: visibilityType);
   }
 
 

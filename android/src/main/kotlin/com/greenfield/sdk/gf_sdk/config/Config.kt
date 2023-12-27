@@ -13,8 +13,12 @@ class Config {
         val bucketInfo = "$baseUrl/bucketInfo"
         val bucketObjects = "$baseUrl/bucketObjects"
         val createObject = "$baseUrl/createObject"
+        val deleteObject = "$baseUrl/deleteObject"
+        val cancelObject = "$baseUrl/cancelObject"
         val createObjectEstimate = "$baseUrl/getCreateObjectEstimate"
         val createFolder = "$baseUrl/createFolder"
+        val uploadObject = "$baseUrl/uploadObject"
+        val updateObject = "$baseUrl/updateObject"
 
         val getBlock = "$baseUrl/getBlock"
         val stats = "$baseUrl/stats"

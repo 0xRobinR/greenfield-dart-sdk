@@ -1,11 +1,13 @@
 package com.greenfield.sdk.gf_sdk.api
 
-import android.content.ContentValues
-import android.util.Log
 import com.greenfield.sdk.gf_sdk.config.Config
 import com.greenfield.sdk.gf_sdk.services.CreateRequest
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 
 interface CreateObjectEstimateOpts {
     val ContentLength: Int?
@@ -38,12 +40,10 @@ class GFObject(authKey: String) {
         }
 
         if (opts.BucketName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "bucket name is empty")
             throw Exception("bucket name is empty")
         }
 
         if (opts.ObjectName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "object name is empty")
             throw Exception("object name is empty")
         }
 
@@ -58,10 +58,8 @@ class GFObject(authKey: String) {
             .put("visibility", visibility)
             .toString()
 
-        Log.d(ContentValues.TAG, "create object estimate: $reqData")
 
         val response = this.caller.fetchResponse(Config.createObjectEstimate, reqData);
-        Log.d("gf_sdk", response.toString())
 
         return response.toString()
     }
@@ -73,12 +71,10 @@ class GFObject(authKey: String) {
         }
 
         if (opts.BucketName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "bucket name is empty")
             throw Exception("bucket name is empty")
         }
 
         if (opts.ObjectName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "object name is empty")
             throw Exception("object name is empty")
         }
 
@@ -93,22 +89,90 @@ class GFObject(authKey: String) {
             .put("visibility", visibility)
             .toString()
 
-        Log.d(ContentValues.TAG, "create object estimate: $reqData")
 
         val response = this.caller.fetchResponse(Config.createObject, reqData);
-        Log.d("gf_sdk", response.toString())
+
+        return response.toString()
+    }
+
+    fun deleteObject(bucketName: String?, objectName: String?, creator: String?): String {
+        if (bucketName.isNullOrEmpty()) {
+            throw Exception("bucket name is empty")
+        }
+
+        if (objectName.isNullOrEmpty()) {
+            throw Exception("object name is empty")
+        }
+
+        val reqData = JSONObject()
+            .put("auth", this.authKey)
+            .put("creator", creator)
+            .put("bucketName", bucketName)
+            .put("objectName", objectName)
+            .toString()
+
+
+        val response = this.caller.fetchResponse(Config.deleteObject, reqData);
+
+        return response.toString()
+    }
+
+    fun cancelObject(bucketName: String?, objectName: String?, creator: String?): String {
+        if (bucketName.isNullOrEmpty()) {
+            throw Exception("bucket name is empty")
+        }
+
+        if (objectName.isNullOrEmpty()) {
+            throw Exception("object name is empty")
+        }
+
+        val reqData = JSONObject()
+            .put("auth", this.authKey)
+            .put("creator", creator)
+            .put("bucketName", bucketName)
+            .put("objectName", objectName)
+            .toString()
+
+
+        val response = this.caller.fetchResponse(Config.cancelObject, reqData);
+
+        return response.toString()
+    }
+
+    fun updateObject(
+        bucketName: String?,
+        objectName: String?,
+        creator: String?,
+        visibility: String?
+    ): String {
+        if (bucketName.isNullOrEmpty()) {
+            throw Exception("bucket name is empty")
+        }
+
+        if (objectName.isNullOrEmpty()) {
+            throw Exception("object name is empty")
+        }
+
+        val reqData = JSONObject()
+            .put("auth", this.authKey)
+            .put("creator", creator)
+            .put("bucketName", bucketName)
+            .put("objectName", objectName)
+            .put("visibility", visibility)
+            .toString()
+
+
+        val response = this.caller.fetchResponse(Config.updateObject, reqData);
 
         return response.toString()
     }
 
     fun createFolder(opts: CreateObjectEstimateOpts): String {
         if (opts.BucketName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "bucket name is empty")
             throw Exception("bucket name is empty")
         }
 
         if (opts.ObjectName.isNullOrEmpty()) {
-            Log.d("gf_sdk", "object name is empty")
             throw Exception("object name is empty")
         }
 
@@ -119,10 +183,51 @@ class GFObject(authKey: String) {
             .put("objectName", opts.ObjectName)
             .toString()
 
-        Log.d(ContentValues.TAG, "create folder: $reqData")
 
         val response = this.caller.fetchResponse(Config.createFolder, reqData);
-        Log.d("gf_sdk", response.toString())
+
+        return response.toString()
+    }
+
+    fun uploadFile(
+        opts: CreateObjectEstimateOpts, txHash: String,
+        file: String
+    ): String {
+        if (opts.BucketName.isNullOrEmpty()) {
+            throw Exception("bucket name is empty")
+        }
+
+        if (opts.ObjectName.isNullOrEmpty()) {
+            throw Exception("object name is empty")
+        }
+
+        if (txHash.isEmpty()) {
+            throw Exception("txHash is empty")
+        }
+
+        if (file.isEmpty()) {
+            throw Exception("file is empty")
+        }
+
+        val filePost = File(file)
+
+        val reqData = opts.Creator?.let {
+            MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("auth", authKey)
+                .addFormDataPart("creator", it)
+                .addFormDataPart("bucketName", opts.BucketName!!)
+                .addFormDataPart("objectName", opts.ObjectName!!)
+                .addFormDataPart("txHash", txHash)
+                .addFormDataPart(
+                    "file", filePost.name,
+                    filePost.asRequestBody("application/octet-stream".toMediaTypeOrNull())
+                )
+                .build()
+        }
+
+
+        val response = reqData?.let { this.caller.fetchResponseFile(Config.uploadObject, it) };
 
         return response.toString()
     }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:gf_sdk/interfaces/gf_global.dart';
 import 'package:gf_sdk/models/CreateObjectApproval.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -84,5 +85,21 @@ abstract class GfSdkPlatform extends PlatformInterface {
 
   Future<String> createFolder({required String authKey, required CreateObjectEstimate opts}) async {
     throw UnimplementedError('createFolder() has not been implemented.');
+  }
+
+  Future<String> uploadObject({required String authKey, required CreateObjectEstimate opts, required String filePath, required String txHash}) async {
+    throw UnimplementedError('uploadObject() has not been implemented.');
+  }
+
+  Future<String> deleteObject({required String authKey, required String objectName, required String bucketName, required String creator}) async {
+    throw UnimplementedError('deleteObject() has not been implemented.');
+  }
+
+  Future<String> cancelObject({required String authKey, required String objectName, required String bucketName, required String creator}) async {
+    throw UnimplementedError('cancelObject() has not been implemented.');
+  }
+
+  Future<String> updateObject({required String authKey, required String objectName, required String bucketName, required String creator, required GfVisibilityType visibilityType}) async {
+    throw UnimplementedError('updateObject() has not been implemented.');
   }
 }

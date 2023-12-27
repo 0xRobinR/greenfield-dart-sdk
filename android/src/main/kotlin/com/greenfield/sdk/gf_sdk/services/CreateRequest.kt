@@ -3,6 +3,7 @@ package com.greenfield.sdk.gf_sdk.services
 import android.content.ContentValues.TAG
 import android.util.Log
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -23,6 +24,28 @@ class CreateRequest {
         val request = Request.Builder()
             .url(url)
             .post(body)
+            .build()
+
+        return try {
+            client.newCall(request).execute().use { response ->
+                return response.body.string()
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "fetchPostError: ${e.message}")
+            "{\"error\": \"${e.message}\"}"
+        }
+    }
+
+    fun fetchResponseFile(url: String, json: MultipartBody): String {
+        val client =
+            OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS) // Set connection timeout
+                .readTimeout(30, TimeUnit.SECONDS)    // Set read timeout
+                .writeTimeout(30, TimeUnit.SECONDS)   // Set write timeout
+                .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .post(json)
             .build()
 
         return try {
