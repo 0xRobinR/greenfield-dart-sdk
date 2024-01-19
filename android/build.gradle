@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.17'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.1'
     }
 }
 
@@ -27,6 +27,7 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.protobuf'
 
 android {
     if (project.android.hasProperty("namespace")) {
@@ -47,6 +48,8 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
+        debug.java.srcDirs += 'build/generated/source/proto/debug/kotlin'
+        release.java.srcDirs += 'build/generated/source/proto/release/kotlin'
     }
 
     defaultConfig {
@@ -57,6 +60,11 @@ android {
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
         implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
+        implementation 'org.bitcoinj:bitcoinj-core:0.15.10'
+        implementation 'com.google.code.gson:gson:2.8.9'
+        implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+
         implementation(name: 'gf_go_mobile', ext: 'aar')
     }
 
@@ -68,6 +76,34 @@ android {
                 events "passed", "skipped", "failed", "standardOut", "standardError"
                 outputs.upToDateWhen { false }
                 showStandardStreams = true
+            }
+        }
+    }
+    configurations {
+        all*.exclude module: 'bcprov-jdk15on'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.protobuf:protobuf-kotlin:3.19.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.21.7' // Protobuf compiler
+    }
+    plugins {
+        kotlin {
+            artifact = "com.google.protobuf:protoc-gen-kotlin:1.2.1" // Kotlin generator plugin
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                remove java
+                kotlin {}
             }
         }
     }

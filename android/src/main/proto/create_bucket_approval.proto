@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.greenfield.sdk.gf_sdk;
+
+import "common.proto";
+
+message CreateBucketApproval {
+  string bucket_name = 1;
+  string charged_read_quota = 2;
+  string creator = 3;
+  string payment_address = 4;
+  string primary_sp_address = 5;
+  PrimarySpApproval primary_sp_approval = 6;
+  string visibility = 7;
+}
