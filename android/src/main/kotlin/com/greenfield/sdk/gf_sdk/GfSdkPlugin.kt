@@ -1,5 +1,6 @@
 package com.greenfield.sdk.gf_sdk
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import com.greenfield.sdk.gf_sdk.api.Account
 import com.greenfield.sdk.gf_sdk.api.Bucket
@@ -7,6 +8,8 @@ import com.greenfield.sdk.gf_sdk.api.CreateBucketOpts
 import com.greenfield.sdk.gf_sdk.api.CreateObjectEstimateOpts
 import com.greenfield.sdk.gf_sdk.api.GFObject
 import com.greenfield.sdk.gf_sdk.api.Greenfield
+import com.greenfield.sdk.gf_sdk.api.bucket.CreateBucket
+import com.greenfield.sdk.gf_sdk.auth.GreenfieldAuth
 import com.greenfield.sdk.gf_sdk.hashencoder.Hashencoder
 import com.greenfield.sdk.gf_sdk.types.VisibilityType
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -38,6 +41,62 @@ class GfSdkPlugin : FlutterPlugin, MethodCallHandler {
                 CoroutineScope(Dispatchers.IO).launch {
                     GFApiCall().makeNetworkCall().run { Log.d("gf_sdk", this.toString()) }
                     result.success("Android ${android.os.Build.VERSION.RELEASE}")
+                }
+            }
+
+            "createBucketGetApproval" -> {
+                val args = call.arguments as? Map<String, Any> ?: run {
+                    result.error("INVALID_ARGUMENTS", "Arguments are not provided correctly", null)
+                    return
+                }
+
+                val privateKey = args["privateKey"] as? String ?: run {
+                    result.error("INVALID_ARGUMENTS", "Private key is missing", null)
+                    return
+                }
+                val networkConfig = args["networkConfig"] as? String ?: run {
+                    result.error("INVALID_ARGUMENTS", "Network configuration is missing", null)
+                    return
+                }
+
+                Log.d("gf_sdk", "greenfield auth onMethodCall: $privateKey");
+
+                val greenfieldAuth = GreenfieldAuth(privateKey)
+
+                val creator = args["creator"] as? String ?: ""
+                val bucketName = args["bucketName"] as? String ?: ""
+                val visibility = args["visibility"] as? Int ?: 0
+                val primarySpAddress = args["primarySpAddress"] as? String ?: ""
+
+                Log.d("gf_sdk", "onMethodCall: $creator $bucketName $visibility $primarySpAddress");
+
+                try {
+                    val createBucket = CreateBucket(greenfieldAuth, networkConfig)
+                    val primary_sp_approval = CreateBucket.PrimarySpApproval(
+                        expired_height = "0",
+                        global_virtual_group_family_id = 0,
+                        sig = ""
+                    )
+
+                    val msgCreateBucket = CreateBucket.MsgCreateBucket(
+                        creator = creator,
+                        bucket_name = bucketName,
+                        visibility = 1,
+                        payment_address = creator,
+                        primary_sp_address = primarySpAddress,
+                        primary_sp_approval = primary_sp_approval,
+                        charged_read_quota = 0
+                    )
+
+                    Log.d(TAG, "msgcreateBucket onMethodCall: $msgCreateBucket")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val result_inner = createBucket.createBucket(msgCreateBucket)
+
+                        Log.d(TAG, "onMethodCall: result $result_inner")
+                        result.success(result_inner)
+                    }
+                } catch (e: Exception) {
+                    result.error("CREATE_BUCKET_ERROR", e.message, null)
                 }
             }
 

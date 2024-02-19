@@ -35,6 +35,10 @@ abstract class GfSdkPlatform extends PlatformInterface {
     throw UnimplementedError('getApproval() has not been implemented.');
   }
 
+  Future<String?> createBucketApproval({required String authKey, required String primaryAddress, required String bucketName, required String spAddress, String network="testnet"}) {
+    throw UnimplementedError('createBucketApprovalSDK() has not been implemented.');
+  }
+
   Future<String?> createBucket({required String authKey, required String primaryAddress, required String bucketName, required String spAddress}) {
     throw UnimplementedError('createBucket() has not been implemented.');
   }

@@ -20,6 +20,16 @@ class GfSdk {
     return GfSdkPlatform.instance.getApproval(authKey: authKey, primaryAddress: primaryAddress, bucketName: bucketName, spAddress: spAddress);
   }
 
+  Future<String?> createBucketApproval(
+      {required String authKey,
+        required String primaryAddress,
+        required String spAddress,
+        required String bucketName,
+      String network="testnet"}) {
+    return GfSdkPlatform.instance.createBucketApproval(
+        authKey: authKey, primaryAddress: primaryAddress, bucketName: bucketName, spAddress: spAddress, network: network);
+  }
+
   Future<String?> createBucket(
       {required String authKey,
       required String primaryAddress,

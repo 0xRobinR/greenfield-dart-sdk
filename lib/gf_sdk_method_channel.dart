@@ -27,6 +27,18 @@ class MethodChannelGfSdk extends GfSdkPlatform {
   }
 
   @override
+  Future<String?> createBucketApproval({required String authKey, required String primaryAddress, required String bucketName, required String spAddress, String network="testnet"}) async {
+    final approval = await methodChannel.invokeMethod<String>("createBucketGetApproval", {
+      "privateKey": authKey,
+      "creator": primaryAddress,
+      "bucketName": bucketName,
+      "primarySpAddress": spAddress,
+      "networkConfig": network,
+    });
+    return approval;
+  }
+
+  @override
   Future<String?> createBucket({required String authKey, required String primaryAddress, required String bucketName, required String spAddress}) async {
     final bucket = await methodChannel.invokeMethod<String>("createBucket", {
       "authKey": authKey,

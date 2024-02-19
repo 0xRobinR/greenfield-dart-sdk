@@ -1,29 +1,26 @@
 package com.greenfield.sdk.gf_sdk.utils
 
-import com.google.gson.Gson
-import com.google.protobuf.util.JsonFormat
-import com.greenfield.sdk.gf_sdk.CreateBucketApprovalSignedMsgKt
-import com.greenfield.sdk.gf_sdk.CreateObjectApprovalSignedMsgKt
+//import com.google.protobuf.util.JsonFormat
 
 object ResponseUtil {
-    fun decodeSignedMsgForCreateBucket(signedMsgHex: String): String {
-        return decodeSignedMsg(signedMsgHex, CreateBucketApprovalSignedMsgKt.getDefaultInstance())
-    }
+//    fun decodeSignedMsgForCreateBucket(signedMsgHex: String): String {
+//        return decodeSignedMsg(signedMsgHex, CreateBucketApprovalSignedMsgKt.getDefaultInstance())
+//    }
+//
+//    fun decodeSignedMsgForCreateObject(signedMsgHex: String): String {
+//        return decodeSignedMsg(signedMsgHex, CreateObjectApprovalSignedMsgKt.getDefaultInstance())
+//    }
 
-    fun decodeSignedMsgForCreateObject(signedMsgHex: String): String {
-        return decodeSignedMsg(signedMsgHex, CreateObjectApprovalSignedMsgKt.getDefaultInstance())
-    }
-
-    private fun decodeSignedMsg(
-        signedMsgHex: String,
-        messageType: Class<out com.google.protobuf.Message>
-    ): String {
-        val bytes = signedMsgHex.hexStringToByteArray()
-        val messageBuilder =
-            messageType.getMethod("newBuilder").invoke(null) as com.google.protobuf.Message.Builder
-        JsonFormat.parser().merge(String(bytes, Charsets.UTF_8), messageBuilder)
-        return Gson().toJson(messageBuilder.build())
-    }
+//    private fun decodeSignedMsg(
+//        signedMsgHex: String,
+//        messageType: Class<out com.google.protobuf.Message>
+//    ): String {
+//        val bytes = signedMsgHex.hexStringToByteArray()
+//        val messageBuilder =
+//            messageType.getMethod("newBuilder").invoke(null) as com.google.protobuf.Message.Builder
+//        JsonFormat.parser().merge(String(bytes, Charsets.UTF_8), messageBuilder)
+//        return Gson().toJson(messageBuilder.build())
+//    }
 
     private fun String.hexStringToByteArray(): ByteArray {
         val len = length
